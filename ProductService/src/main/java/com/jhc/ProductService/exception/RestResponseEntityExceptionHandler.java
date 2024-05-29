@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler {
-    @ExceptionHandler(ProductServiceCustomException.class)
-    public ResponseEntity<ErrorResponse> handleProductServiceException(ProductServiceCustomException exception)
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<ErrorResponse> handleCustomException(CustomException exception)
     {
         return new ResponseEntity<>(new ErrorResponse()
-                .builder().errorMessage(exception.getMessage()).errorCode(exception.getErrorCode()).build(), HttpStatus.NOT_FOUND );
+                .builder().errorMessage(exception.getMessage()).
+                errorCode(exception.getErrorCode()).build(),
+                HttpStatus.valueOf(exception.getStatus()) );
     }
 }
