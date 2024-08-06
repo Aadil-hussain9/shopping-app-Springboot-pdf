@@ -1,7 +1,7 @@
 package com.jhc.ProductService.service.impl;
 
 import com.jhc.ProductService.entity.Order;
-import com.jhc.ProductService.exception.CustomException;
+import com.jhc.ProductService.exceptions.CustomException;
 import com.jhc.ProductService.model.*;
 import com.jhc.ProductService.repository.OrderRepository;
 import com.jhc.ProductService.service.OrderService;
@@ -10,23 +10,29 @@ import com.jhc.ProductService.service.ProductService;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Log4j2
 public class OrderServiceImpl implements OrderService {
 
-    @Autowired
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
-    @Autowired
-    private PaymentService paymentService;
+    private final PaymentService paymentService;
+
+    public OrderServiceImpl(OrderRepository orderRepository, ProductService productService, PaymentService paymentService){
+        this.orderRepository = orderRepository;
+        this.productService = productService;
+        this.paymentService = paymentService;
+    }
 
     @Override
     public long placeOrder(OrderRequest orderRequest) {
@@ -76,7 +82,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderResponse getOrderDetails(long orderId) {
         log.info("Get order details for id:{}", orderId);
-        Order order = orderRepository.findById(orderId)
+        Order order = orderRepository.findOrderById(orderId)
                 .orElseThrow(() -> new CustomException("Order not found for Order Id :" + orderId,
                         "not_found", 404));
 
@@ -84,6 +90,8 @@ public class OrderServiceImpl implements OrderService {
         ProductResponse productResponse = productService.getProductById(order.getProductId());
         OrderResponse.ProductDetails productDetails = OrderResponse.ProductDetails.builder()
                 .productName(productResponse.getProductName())
+                .quantity(productResponse.getQuantity())
+                .price(productResponse.getPrice())
                 .productId(productResponse.getProductId()).
                 build();
 
@@ -94,6 +102,10 @@ public class OrderServiceImpl implements OrderService {
                 .paymentMode(paymentResponse.getPaymentMode())
                 .status(paymentResponse.getStatus())
                 .paymentDate(paymentResponse.getPaymentDate())
+                .userId(paymentResponse.getUserId())
+                .amount(paymentResponse.getAmount())
+                .userId(paymentResponse.getUserId())
+                .orderId(paymentResponse.getOrderId())
                 .build();
 
         OrderResponse orderResponse = OrderResponse.builder().
@@ -103,9 +115,23 @@ public class OrderServiceImpl implements OrderService {
                 .amount(order.getAmount())
                 .productDetails(productDetails)
                 .paymentDetails(paymentDetails)
+                .userId(order.getUser().getId())
                 .build();
 
 
         return orderResponse;
+    }
+
+    @Override
+    public List<OrderResponse> findAllOrdersByUserId(long userId) {
+        List<Order> orderList = orderRepository.findByUserId(userId);
+        return orderList.stream().map(order ->
+                OrderResponse.builder()
+                        .orderStatus(order.getOrderStatus())
+                        .amount(order.getAmount())
+                        .orderDate(order.getOrderDate())
+                        .productDetails(OrderResponse.ProductDetails.builder().productId(order.getProductId()).build())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

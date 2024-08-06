@@ -1,7 +1,7 @@
 package com.jhc.ProductService.service.impl;
 
 import com.jhc.ProductService.entity.Product;
-import com.jhc.ProductService.exception.ProductServiceCustomException;
+import com.jhc.ProductService.exceptions.ProductServiceCustomException;
 import com.jhc.ProductService.model.ProductRequest;
 import com.jhc.ProductService.model.ProductResponse;
 import com.jhc.ProductService.repository.ProductRepository;

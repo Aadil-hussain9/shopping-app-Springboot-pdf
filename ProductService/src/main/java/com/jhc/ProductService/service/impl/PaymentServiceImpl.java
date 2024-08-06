@@ -52,6 +52,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .orderId(transactionDetails.getOrderId())
                 .status(transactionDetails.getPaymentStatus())
                 .amount(transactionDetails.getAmount())
+                .userId(transactionDetails.getUser().getId())
                 .build();
         return paymentResponse;
     }

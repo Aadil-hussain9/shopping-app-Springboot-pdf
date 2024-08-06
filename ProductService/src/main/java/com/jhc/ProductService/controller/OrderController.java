@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/order")
@@ -34,5 +35,10 @@ public class OrderController {
     {
         OrderResponse orderResponse = orderService.getOrderDetails(orderId);
         return new ResponseEntity<>(orderResponse,HttpStatus.OK);
+    }
+
+    @GetMapping("/find-all-orders/{userId}")
+    public ResponseEntity<List<OrderResponse>> findAllOrdersByUserId(@PathVariable long userId){
+        return ResponseEntity.ok(orderService.findAllOrdersByUserId(userId));
     }
 }

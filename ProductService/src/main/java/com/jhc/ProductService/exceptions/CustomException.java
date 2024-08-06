@@ -1,4 +1,4 @@
-package com.jhc.ProductService.exception;
+package com.jhc.ProductService.exceptions;
 
 import lombok.Data;
 

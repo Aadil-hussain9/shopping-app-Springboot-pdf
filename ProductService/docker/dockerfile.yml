@@ -12,6 +12,5 @@ services:
     entrypoint:
       sh -c "
       echo '
-      CREATE DATABASE IF NOT EXISTS productdb;
-      CREATE DATABASE IF NOT EXISTS user;' > /docker-entrypoint-initdb.d/init.sql;
+      CREATE DATABASE IF NOT EXISTS shoppingdb;' > /docker-entrypoint-initdb.d/init.sql;
       /usr/local/bin/docker-entrypoint.sh --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"

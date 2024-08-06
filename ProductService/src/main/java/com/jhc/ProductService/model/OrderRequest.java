@@ -1,10 +1,13 @@
 package com.jhc.ProductService.model;
 
 
+import com.jhc.ProductService.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.ManyToOne;
 
 @Data
 @AllArgsConstructor
@@ -17,4 +20,6 @@ public class OrderRequest {
 
     private PaymentMode paymentMode;
 
+    @ManyToOne
+    private User user;
 }

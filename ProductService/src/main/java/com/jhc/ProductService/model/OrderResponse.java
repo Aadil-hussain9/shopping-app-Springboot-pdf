@@ -19,6 +19,7 @@ public class OrderResponse {
     private long amount;
     private ProductDetails productDetails;
     private PaymentDetails paymentDetails;
+    private long userId;
 
     @Data
     @Builder
@@ -43,6 +44,7 @@ public class OrderResponse {
         private long amount;
         private Instant paymentDate;
         private long orderId;
+        private long userId;
     }
 
 }
